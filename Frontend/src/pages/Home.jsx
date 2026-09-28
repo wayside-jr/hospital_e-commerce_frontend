@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -15,7 +16,7 @@ function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white overflow-x-hidden">
          <Navbar />
 
       {/* Hero Section */}
@@ -24,7 +25,7 @@ function Home() {
 
           <div className="max-w-3xl mx-auto text-center">
 
-            <h1 className="text-5xl font-bold text-gray-900 mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold">
               Quality Medical Supplies You Can Trust
             </h1>
 
@@ -137,6 +138,7 @@ function Home() {
         </div>
 
       </section>
+      <Footer/>
 
     </div>
   );

@@ -19,8 +19,13 @@ function Login() {
       );
 
       localStorage.setItem(
-        "token",
-        data.access_token
+          "token",
+          data.access_token
+      );
+
+      localStorage.setItem(
+          "user",
+          JSON.stringify(data.user)
       );
 
       alert("Login successful");

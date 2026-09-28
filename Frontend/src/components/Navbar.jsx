@@ -1,66 +1,91 @@
-import { Link, useNavigate } from "react-router-dom";
+import {
+  NavLink,
+  useNavigate
+} from "react-router-dom";
+
+import { ShoppingCart } from "lucide-react";
 
 function Navbar() {
   const navigate = useNavigate();
 
   const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
 
   function handleLogout() {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
     navigate("/login");
   }
 
+  const linkClass = ({ isActive }) =>
+    isActive
+      ? "text-blue-600 font-semibold border-b-2 border-blue-600 pb-1"
+      : "text-gray-700 hover:text-blue-600 transition-colors";
+
   return (
-    <nav className="bg-white shadow-md">
+    <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
 
-        <Link
+        {/* Logo */}
+        <NavLink
           to="/"
           className="text-2xl font-bold text-blue-600"
         >
           Jeremy Enterprises
-        </Link>
+        </NavLink>
 
+        {/* Navigation Links */}
         <div className="flex gap-6 items-center">
 
-          <Link
+          <NavLink
             to="/"
-            className="hover:text-blue-600"
+            end
+            className={linkClass}
           >
             Home
-          </Link>
+          </NavLink>
 
-          <Link
+          <NavLink
             to="/products"
-            className="hover:text-blue-600"
+            className={linkClass}
           >
             Products
-          </Link>
+          </NavLink>
 
-          <Link
+          <NavLink
             to="/cart"
-            className="hover:text-blue-600"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-600 font-semibold border-b-2 border-blue-600 pb-1 flex items-center gap-2"
+                : "text-gray-700 hover:text-blue-600 transition-colors flex items-center gap-2"
+            }
           >
+            <ShoppingCart className="w-5 h-5" />
             Cart
-          </Link>
+          </NavLink>
 
-          <Link
-            to="/orders"
-            className="hover:text-blue-600"
-          >
-            Orders
-          </Link>
+
+          {/* Only Admins can see this */}
+          {user?.role === "admin" && (
+            <NavLink
+              to="/admin"
+              className={linkClass}
+            >
+              Admin
+            </NavLink>
+          )}
 
           {!token ? (
             <>
-              <Link
+              <NavLink
                 to="/login"
-                className="hover:text-blue-600"
+                className={linkClass}
               >
                 Login
-              </Link>
+              </NavLink>
 
-              <Link
+              <NavLink
                 to="/register"
                 className="
                   bg-blue-600
@@ -68,10 +93,12 @@ function Navbar() {
                   px-4
                   py-2
                   rounded-lg
+                  hover:bg-blue-700
+                  transition-colors
                 "
               >
                 Register
-              </Link>
+              </NavLink>
             </>
           ) : (
             <button
@@ -82,13 +109,15 @@ function Navbar() {
                 px-4
                 py-2
                 rounded-lg
+                hover:bg-red-600
+                transition-colors
               "
             >
               Logout
             </button>
           )}
-        </div>
 
+        </div>
       </div>
     </nav>
   );
