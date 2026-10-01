@@ -4,6 +4,8 @@ import {
   useState,
 } from "react";
 
+import { useNavigate } from "react-router-dom";
+
 import {
   Package,
   ShoppingBag,
@@ -28,7 +30,11 @@ import {
   updateOrderStatus,
 } from "../services/orderService";
 
+
 function AdminDashboard() {
+
+  const navigate = useNavigate();
+
 
   // ==========================
   // STATE
@@ -54,6 +60,7 @@ function AdminDashboard() {
   // ==========================
 
   async function fetchProducts() {
+
     try {
 
       const data = await getProducts();
@@ -75,6 +82,7 @@ function AdminDashboard() {
   // ==========================
 
   async function fetchOrders() {
+
     try {
 
       const data = await getAllOrders();
@@ -327,6 +335,7 @@ function AdminDashboard() {
 
       </div>
     );
+
   }
 
 
@@ -337,6 +346,7 @@ function AdminDashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
 
+
       {/* ==========================
           HEADER
       ========================== */}
@@ -346,6 +356,9 @@ function AdminDashboard() {
         <div className="max-w-7xl mx-auto px-4 py-8">
 
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+
+            {/* Dashboard Title */}
 
             <div>
 
@@ -359,13 +372,35 @@ function AdminDashboard() {
 
             </div>
 
-            <button
-              onClick={openAddModal}
-              className="flex items-center justify-center gap-2 bg-blue-600 text-white px-5 py-3 rounded-lg hover:bg-blue-700 transition"
-            >
-              <Plus size={20} />
-              Add Product
-            </button>
+
+            {/* Right Side Buttons */}
+
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+
+
+              {/* Back to Home */}
+
+              <button
+                type="button"
+                onClick={() => navigate("/")}
+                className="flex items-center justify-center gap-2 bg-gray-100 text-gray-700 px-5 py-3 rounded-lg hover:bg-gray-200 transition"
+              >
+                ← Back to Home
+              </button>
+
+
+              {/* Add Product */}
+
+              <button
+                type="button"
+                onClick={openAddModal}
+                className="flex items-center justify-center gap-2 bg-blue-600 text-white px-5 py-3 rounded-lg hover:bg-blue-700 transition"
+              >
+                <Plus size={20} />
+                Add Product
+              </button>
+
+            </div>
 
           </div>
 
@@ -423,6 +458,7 @@ function AdminDashboard() {
           <div className="flex border-b">
 
             <button
+              type="button"
               onClick={() =>
                 setActiveTab("products")
               }
@@ -438,6 +474,7 @@ function AdminDashboard() {
 
 
             <button
+              type="button"
               onClick={() =>
                 setActiveTab("orders")
               }
@@ -478,7 +515,9 @@ function AdminDashboard() {
 
               </div>
 
+
               <button
+                type="button"
                 onClick={openAddModal}
                 className="flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
               >
@@ -487,6 +526,7 @@ function AdminDashboard() {
               </button>
 
             </div>
+
 
             <ProductsTable
               products={products}
@@ -518,6 +558,7 @@ function AdminDashboard() {
               </p>
 
             </div>
+
 
             <OrderTable
               orders={orders}

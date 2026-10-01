@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://127.0.0.1:5000/products";
+const API = "http://127.0.0.1:5000/products/";
 
 const getToken = () => localStorage.getItem("token");
 
@@ -23,7 +23,7 @@ export async function getProducts() {
 // GET ONE PRODUCT
 // ======================
 export async function getProduct(id) {
-  const response = await axios.get(`${API}/${id}`);
+  const response = await axios.get(`${API}${id}`);
 
   return response.data;
 }
@@ -49,7 +49,7 @@ export async function updateProduct(
   productData
 ) {
   const response = await axios.put(
-    `${API}/${id}`,
+    `${API}${id}`,
     productData,
     authHeader()
   );
@@ -62,9 +62,10 @@ export async function updateProduct(
 // ======================
 export async function deleteProduct(id) {
   const response = await axios.delete(
-    `${API}/${id}`,
+    `${API}${id}`,
     authHeader()
   );
 
   return response.data;
 }
+
