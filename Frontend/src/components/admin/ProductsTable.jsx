@@ -1,4 +1,3 @@
-
 import {
   Pencil,
   Trash2,
@@ -55,12 +54,14 @@ function ProductsTable({
             {products.length === 0 ? (
 
               <tr>
+
                 <td
                   colSpan="7"
                   className="py-8 text-center text-gray-500"
                 >
                   No products found.
                 </td>
+
               </tr>
 
             ) : (
@@ -73,19 +74,46 @@ function ProductsTable({
                 >
 
                   {/* IMAGE */}
+
                   <td className="px-6 py-4">
-                    <img
-                      src={
-                        product.image_url ||
-                        "https://placehold.co/70x70?text=No+Image"
-                      }
-                      alt={product.name}
-                      className="w-16 h-16 rounded-lg object-cover border"
-                    />
+
+                    <div
+                      className="
+                        w-16
+                        h-16
+                        flex
+                        items-center
+                        justify-center
+                        bg-gray-50
+                        rounded-lg
+                        border
+                        overflow-hidden
+                      "
+                    >
+
+                      <img
+                        src={
+                          product.image_url ||
+                          "https://placehold.co/70x70?text=No+Image"
+                        }
+                        alt={product.name}
+                        className="
+                          max-w-full
+                          max-h-full
+                          w-auto
+                          h-auto
+                          object-contain
+                        "
+                      />
+
+                    </div>
+
                   </td>
 
                   {/* PRODUCT */}
+
                   <td className="px-6 py-4">
+
                     <h3 className="font-semibold">
                       {product.name}
                     </h3>
@@ -93,25 +121,34 @@ function ProductsTable({
                     <p className="text-sm text-gray-500 line-clamp-2">
                       {product.description}
                     </p>
+
                   </td>
 
                   {/* CATEGORY */}
+
                   <td className="px-6 py-4">
                     {product.category || "-"}
                   </td>
 
                   {/* BRAND */}
+
                   <td className="px-6 py-4">
                     {product.brand || "-"}
                   </td>
 
                   {/* PRICE */}
+
                   <td className="px-6 py-4 font-semibold">
+
                     KSh{" "}
-                    {Number(product.price).toLocaleString()}
+                    {Number(
+                      product.price
+                    ).toLocaleString()}
+
                   </td>
 
                   {/* STOCK */}
+
                   <td className="px-6 py-4">
 
                     <span
@@ -129,6 +166,7 @@ function ProductsTable({
                   </td>
 
                   {/* ACTIONS */}
+
                   <td className="px-6 py-4">
 
                     <div className="flex justify-center gap-3">
@@ -137,7 +175,14 @@ function ProductsTable({
                         onClick={() =>
                           onEdit(product)
                         }
-                        className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-lg transition"
+                        className="
+                          bg-blue-500
+                          hover:bg-blue-600
+                          text-white
+                          p-2
+                          rounded-lg
+                          transition
+                        "
                         title="Edit product"
                       >
                         <Pencil size={18} />
@@ -147,7 +192,14 @@ function ProductsTable({
                         onClick={() =>
                           onDelete(product.id)
                         }
-                        className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg transition"
+                        className="
+                          bg-red-500
+                          hover:bg-red-600
+                          text-white
+                          p-2
+                          rounded-lg
+                          transition
+                        "
                         title="Delete product"
                       >
                         <Trash2 size={18} />
@@ -163,12 +215,13 @@ function ProductsTable({
             )}
 
           </tbody>
+
         </table>
 
       </div>
+
     </div>
   );
 }
 
 export default ProductsTable;
-

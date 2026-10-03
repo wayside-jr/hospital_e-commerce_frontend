@@ -50,12 +50,12 @@ function ProductDetails() {
           "https://hospital-e-commerce-backend.onrender.com/cart/add",
           {
             product_id: product.id,
-            quantity: 1
+            quantity: 1,
           },
           {
             headers: {
-              Authorization: `Bearer ${token}`
-            }
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
 
@@ -64,16 +64,29 @@ function ProductDetails() {
       alert("Product added to cart!");
 
     } catch (error) {
-  console.error("STATUS:", error.response?.status);
-  console.error("DATA:", error.response?.data);
-  console.error("HEADERS:", error.response?.headers);
+      console.error(
+        "STATUS:",
+        error.response?.status
+      );
 
-  alert(
-    error.response?.data?.msg ||
-    error.response?.data?.message ||
-    "Failed to add product to cart"
-  );
-}
+      console.error(
+        "DATA:",
+        error.response?.data
+      );
+
+      console.error(
+        "HEADERS:",
+        error.response?.headers
+      );
+
+      alert(
+        error.response?.data?.msg ||
+        error.response?.data?.message ||
+        "Failed to add product to cart"
+      );
+    } finally {
+      setAddingToCart(false);
+    }
   }
 
   if (loading) {
@@ -94,6 +107,7 @@ function ProductDetails() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 py-12">
@@ -120,6 +134,7 @@ function ProductDetails() {
             overflow-hidden
           "
         >
+
           <div
             className="
               grid
@@ -129,23 +144,33 @@ function ProductDetails() {
             "
           >
 
-            {/* Product Image */}
-            <div>
+            {/* ==========================
+                PRODUCT IMAGE
+            ========================== */}
+
+            <div className="flex items-start justify-center">
+
               <img
                 src={
                   product.image_url ||
-                  "https://placehold.co/600x600"
+                  "https://placehold.co/600x600?text=No+Image"
                 }
                 alt={product.name}
                 className="
                   w-full
+                  h-auto
+                  max-w-full
                   rounded-xl
-                  object-cover
+                  object-contain
                 "
               />
+
             </div>
 
-            {/* Product Details */}
+            {/* ==========================
+                PRODUCT DETAILS
+            ========================== */}
+
             <div>
 
               <span
@@ -182,10 +207,16 @@ function ProductDetails() {
                   mb-6
                 "
               >
-                KSh {product.price}
+                KSh{" "}
+                {Number(
+                  product.price
+                ).toLocaleString()}
               </p>
 
+              {/* DESCRIPTION */}
+
               <div className="mb-6">
+
                 <h2
                   className="
                     text-xl
@@ -199,9 +230,13 @@ function ProductDetails() {
                 <p className="text-gray-600">
                   {product.description}
                 </p>
+
               </div>
 
+              {/* PRODUCT INFORMATION */}
+
               <div className="mb-6">
+
                 <h2
                   className="
                     text-xl
@@ -216,12 +251,12 @@ function ProductDetails() {
 
                   <p>
                     <strong>Brand:</strong>{" "}
-                    {product.brand}
+                    {product.brand || "-"}
                   </p>
 
                   <p>
                     <strong>Category:</strong>{" "}
-                    {product.category}
+                    {product.category || "-"}
                   </p>
 
                   <p>
@@ -230,12 +265,17 @@ function ProductDetails() {
                   </p>
 
                 </div>
+
               </div>
 
-              {/* Add To Cart Button */}
+              {/* ADD TO CART */}
+
               <button
                 onClick={addToCart}
-                disabled={addingToCart}
+                disabled={
+                  addingToCart ||
+                  Number(product.stock) <= 0
+                }
                 className="
                   w-full
                   bg-blue-600
@@ -249,16 +289,21 @@ function ProductDetails() {
               >
                 {addingToCart
                   ? "Adding..."
+                  : Number(product.stock) <= 0
+                  ? "Out of Stock"
                   : "Add To Cart"}
               </button>
 
             </div>
+
           </div>
+
         </div>
 
       </div>
 
       <Footer />
+
     </div>
   );
 }

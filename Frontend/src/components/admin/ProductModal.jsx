@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { X } from "lucide-react";
+import {
+  X,
+  Upload,
+  Image as ImageIcon,
+} from "lucide-react";
 
 function ProductModal({
   isOpen,
@@ -17,6 +21,9 @@ function ProductModal({
     image_url: "",
   });
 
+  const [imagePreview, setImagePreview] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const [dragActive, setDragActive] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -30,6 +37,9 @@ function ProductModal({
         brand: product.brand || "",
         image_url: product.image_url || "",
       });
+
+      setImagePreview(product.image_url || "");
+      setImageFile(null);
     } else {
       setFormData({
         name: "",
@@ -40,6 +50,9 @@ function ProductModal({
         brand: "",
         image_url: "",
       });
+
+      setImagePreview("");
+      setImageFile(null);
     }
   }, [product, isOpen]);
 
@@ -54,6 +67,92 @@ function ProductModal({
       ...previous,
       [name]: value,
     }));
+
+    // If the user manually enters an image URL,
+    // show it as the preview.
+    if (name === "image_url") {
+      setImagePreview(value);
+      setImageFile(null);
+    }
+  }
+
+  function handleImageFile(file) {
+    if (!file) {
+      return;
+    }
+
+    // Only allow image files
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file.");
+      return;
+    }
+
+    // Limit image size to 5MB
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Image must be smaller than 5MB.");
+      return;
+    }
+
+    setImageFile(file);
+
+    // Create a temporary preview
+    const previewUrl = URL.createObjectURL(file);
+    setImagePreview(previewUrl);
+
+    // We keep image_url empty for now.
+    // The actual upload will be handled by the backend/storage.
+    setFormData((previous) => ({
+      ...previous,
+      image_url: "",
+    }));
+  }
+
+  function handleFileChange(e) {
+    const file = e.target.files?.[0];
+
+    handleImageFile(file);
+  }
+
+  function handleDragEnter(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setDragActive(true);
+  }
+
+  function handleDragLeave(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setDragActive(false);
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setDragActive(true);
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setDragActive(false);
+
+    const file = e.dataTransfer.files?.[0];
+
+    handleImageFile(file);
+  }
+
+  function removeImage() {
+    setImageFile(null);
+    setImagePreview("");
+
+    setFormData((previous) => ({
+      ...previous,
+      image_url: "",
+    }));
   }
 
   async function handleSubmit(e) {
@@ -66,6 +165,10 @@ function ProductModal({
         ...formData,
         price: Number(formData.price),
         stock: Number(formData.stock),
+
+        // The selected file is included so the parent
+        // can upload it later.
+        imageFile,
       });
     } finally {
       setSubmitting(false);
@@ -219,20 +322,144 @@ function ProductModal({
 
           </div>
 
-          {/* IMAGE URL */}
+          {/* IMAGE */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Image URL
+
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Product Image
             </label>
 
-            <input
-              type="url"
-              name="image_url"
-              value={formData.image_url}
-              onChange={handleChange}
-              className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="https://example.com/image.jpg"
-            />
+            {/* DRAG AND DROP AREA */}
+            <div
+              onDragEnter={handleDragEnter}
+              onDragLeave={handleDragLeave}
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+              className={`relative border-2 border-dashed rounded-xl p-6 text-center transition ${
+                dragActive
+                  ? "border-blue-500 bg-blue-50"
+                  : "border-gray-300 hover:border-blue-400"
+              }`}
+            >
+
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="hidden"
+                id="product-image-upload"
+              />
+
+              {imagePreview ? (
+
+                <div className="space-y-4">
+
+                  <div className="flex justify-center">
+
+                    <img
+                      src={imagePreview}
+                      alt="Product preview"
+                      className="w-40 h-40 object-cover rounded-xl border"
+                      onError={() => {
+                        setImagePreview("");
+                      }}
+                    />
+
+                  </div>
+
+                  {imageFile && (
+                    <p className="text-sm text-gray-600">
+                      {imageFile.name}
+                    </p>
+                  )}
+
+                  <div className="flex justify-center gap-3">
+
+                    <label
+                      htmlFor="product-image-upload"
+                      className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                    >
+                      <Upload size={18} />
+                      Choose Another
+                    </label>
+
+                    <button
+                      type="button"
+                      onClick={removeImage}
+                      className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition"
+                    >
+                      Remove
+                    </button>
+
+                  </div>
+
+                </div>
+
+              ) : (
+
+                <div className="space-y-3">
+
+                  <div className="flex justify-center">
+                    <div className="p-3 bg-gray-100 rounded-full">
+                      <ImageIcon
+                        size={30}
+                        className="text-gray-500"
+                      />
+                    </div>
+                  </div>
+
+                  <p className="text-gray-700 font-medium">
+                    Drag & drop your image here
+                  </p>
+
+                  <p className="text-gray-500 text-sm">
+                    or
+                  </p>
+
+                  <label
+                    htmlFor="product-image-upload"
+                    className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                  >
+                    <Upload size={18} />
+                    Choose from Computer
+                  </label>
+
+                  <p className="text-xs text-gray-400">
+                    PNG, JPG, JPEG, WEBP • Maximum 5MB
+                  </p>
+
+                </div>
+
+              )}
+
+            </div>
+
+            {/* IMAGE URL */}
+            <div className="mt-4">
+
+              <div className="flex items-center gap-2 mb-2">
+
+                <div className="h-px bg-gray-200 flex-1"></div>
+
+                <span className="text-xs text-gray-400">
+                  OR USE IMAGE URL
+                </span>
+
+                <div className="h-px bg-gray-200 flex-1"></div>
+
+              </div>
+
+              <input
+                type="url"
+                name="image_url"
+                value={formData.image_url}
+                onChange={handleChange}
+                className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="https://example.com/image.jpg"
+              />
+
+            </div>
+
           </div>
 
           {/* BUTTONS */}
