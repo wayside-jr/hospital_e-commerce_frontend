@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://127.0.0.1:5000/orders";
+const API = "https://hospital-e-commerce-backend.onrender.com/orders";
 
 const getToken = () => localStorage.getItem("token");
 
