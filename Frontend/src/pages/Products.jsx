@@ -19,7 +19,7 @@ function Products() {
   async function fetchProducts() {
     try {
       const response = await axios.get(
-        "https://hospital-e-commerce-backend.onrender.com/products/"
+        "https://hospital-e-commerce-backend-fast.onrender.com/products/"
       );
 
       setProducts(response.data);

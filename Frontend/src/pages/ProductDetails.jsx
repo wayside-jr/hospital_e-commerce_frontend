@@ -27,7 +27,7 @@ function ProductDetails() {
     try {
       const response =
         await axios.get(
-          `https://hospital-e-commerce-backend.onrender.com/products/${id}`
+          `https://hospital-e-commerce-backend-fast.onrender.com/products/${id}`
         );
 
       setProduct(response.data);
@@ -47,7 +47,7 @@ function ProductDetails() {
 
       const response =
         await axios.post(
-          "https://hospital-e-commerce-backend.onrender.com/cart/add",
+          "https://hospital-e-commerce-backend-fast.onrender.com/cart/add",
           {
             product_id: product.id,
             quantity: 1,

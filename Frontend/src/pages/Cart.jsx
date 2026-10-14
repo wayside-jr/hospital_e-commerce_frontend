@@ -51,7 +51,7 @@ function Cart() {
 
       const response =
         await axios.get(
-          "https://hospital-e-commerce-backend.onrender.com/cart/",
+          "https://hospital-e-commerce-backend-fast.onrender.com/cart/",
           {
             headers: {
               Authorization: `Bearer ${token}`
@@ -97,7 +97,7 @@ function Cart() {
         localStorage.getItem("token");
 
       await axios.delete(
-        `https://hospital-e-commerce-backend.onrender.com/cart/item/${cartItemId}`,
+        `https://hospital-e-commerce-backend-fast.onrender.com/cart/item/${cartItemId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -137,7 +137,7 @@ function Cart() {
         localStorage.getItem("token");
 
       await axios.post(
-        "https://hospital-e-commerce-backend.onrender.com/cart/add",
+        "https://hospital-e-commerce-backend-fast.onrender.com/cart/add",
         {
           product_id: item.product_id,
           quantity: 1

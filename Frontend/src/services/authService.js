@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "https://hospital-e-commerce-backend.onrender.com";
+const API = "https://hospital-e-commerce-backend-fast.onrender.com";
 
 export async function loginUser(
   email,
