@@ -23,6 +23,7 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
+  uploadProductImage,
 } from "../services/productService";
 
 import {
@@ -133,39 +134,57 @@ function AdminDashboard() {
   // ADD PRODUCT
   // ==========================
 
+
   async function handleAddProduct(productData) {
-
     try {
+      const { imageFile, ...productDetails } = productData;
 
-      await createProduct(productData);
+      // Upload the selected image first.
+      if (imageFile) {
+        productDetails.image_url = await uploadProductImage(imageFile);
+      }
+
+      // Save the product with its permanent image URL.
+      await createProduct(productDetails);
 
       await fetchProducts();
 
       setModalOpen(false);
 
       alert("Product added successfully.");
-
     } catch (error) {
+      console.error(
+        "Unable to create product:",
+        error.response?.data || error
+      );
 
-      console.error(error);
-
-      alert("Unable to create product.");
-
+      alert(
+        error.response?.data?.error ||
+        "Unable to create product."
+      );
     }
   }
+
 
 
   // ==========================
   // EDIT PRODUCT
   // ==========================
 
+
   async function handleEditProduct(productData) {
-
     try {
+      const { imageFile, ...productDetails } = productData;
 
+      // Upload a replacement image only if one was selected.
+      if (imageFile) {
+        productDetails.image_url = await uploadProductImage(imageFile);
+      }
+
+      // Save the updated product details.
       await updateProduct(
         selectedProduct.id,
-        productData
+        productDetails
       );
 
       await fetchProducts();
@@ -175,15 +194,19 @@ function AdminDashboard() {
       setModalOpen(false);
 
       alert("Product updated.");
-
     } catch (error) {
+      console.error(
+        "Unable to update product:",
+        error.response?.data || error
+      );
 
-      console.error(error);
-
-      alert("Unable to update product.");
-
+      alert(
+        error.response?.data?.error ||
+        "Unable to update product."
+      );
     }
-  }
+}
+
 
 
   // ==========================

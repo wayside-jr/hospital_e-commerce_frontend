@@ -69,3 +69,25 @@ export async function deleteProduct(id) {
   return response.data;
 }
 
+
+/* ======================
+   UPLOAD PRODUCT IMAGE
+====================== */
+export async function uploadProductImage(imageFile) {
+  const formData = new FormData();
+
+  formData.append("image", imageFile);
+
+  const response = await axios.post(
+    `${API}upload-image`,
+    formData,
+    {
+      headers: {
+        ...authHeader().headers,
+      },
+    }
+  );
+
+  return response.data.image_url;
+}
+
